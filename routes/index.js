@@ -1,10 +1,19 @@
 const express = require("express");
-const { getProductAll } = require("../controllers/productController");
+const {
+  createProduct,
+  getProducts,
+} = require("../controllers/productController");
+const { createCategory } = require("../controllers/categoryController");
 
 const route = express.Router();
 
 const initApiRoute = (app) => {
-  route.get("/getproduct", getProductAll);
+  //category
+  route.post("/create-category", createCategory);
+
+  //product
+  route.post("/create-product", createProduct);
+  route.get("/getProducts", getProducts);
   return app.use("/api/v1", route);
 };
 
