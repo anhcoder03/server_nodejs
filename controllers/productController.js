@@ -55,8 +55,23 @@ const getProducts = async (req, res) => {
     res.status(400).json(`Lỗi: ${err}`);
   }
 };
+const getProductById = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const data = await Product.findById(id);
+    if (!data) {
+      return res.status(404).json({
+        message: "Không tìm thấy sản phẩm",
+      });
+    }
+    return res.status(200).json({
+      message: "Oke lâla",
+      data,
+    });
+  } catch (err) {}
+};
 
-module.exports = { createProduct, getProducts };
+module.exports = { createProduct, getProducts, getProductById };
 
 // const {
 //   _page = 1,
