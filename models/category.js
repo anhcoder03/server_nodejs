@@ -1,9 +1,12 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const { Schema } = mongoose;
 const categorySchema = new Schema(
   {
     name: {
       type: String,
+      required: true,
     },
     products: [{ type: mongoose.Types.ObjectId, ref: "Product" }],
   },
@@ -31,5 +34,6 @@ categorySchema.pre("findOneAndDelete", async function (next) {
     next(err);
   }
 });
+categorySchema.plugin(mongoosePaginate);
 
-export default mongoose.model("Category", categorySchema);
+module.exports = mongoose.model("Category", categorySchema);
