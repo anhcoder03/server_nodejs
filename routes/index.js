@@ -20,8 +20,10 @@ const {
   getUserById,
   updateUser,
   removeUser,
+  createNewRefreshToken,
+  logout,
 } = require("../controllers/authController");
-const { verifyTokenAdmin } = require("../middleware/auth");
+const { verifyTokenAdmin, verifyToken } = require("../middleware/auth");
 
 const route = express.Router();
 
@@ -48,6 +50,8 @@ const authRoute = (app) => {
   route.get("/getUser/:id", getUserById);
   route.put("/update-user/:id", updateUser);
   route.delete("/remove-user/:id", removeUser);
+  route.post("/refreshToken", createNewRefreshToken);
+  route.post("/logout", verifyToken, logout);
   return app.use("/api/v1", route);
 };
 

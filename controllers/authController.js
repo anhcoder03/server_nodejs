@@ -9,7 +9,7 @@ const creacteAccessToken = (payload) => {
     { id: payload._id, admin: payload.admin },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "1d",
+      expiresIn: "20s",
     }
   );
 };
@@ -75,6 +75,7 @@ const login = async (req, res) => {
     const accessToken = creacteAccessToken(user);
     const refreshToken = creacteRefreshToken(user);
     refreshTokens.push(refreshToken);
+    console.log(refreshTokens);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false,
@@ -174,6 +175,42 @@ const removeUser = async (req, res) => {
   }
 };
 
+const createNewRefreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  console.log(refreshTokens);
+  if (!refreshToken) return res.status(401).json("You're not authenticated");
+  if (!refreshTokens.includes(refreshToken)) {
+    return res.status(403).json("Refresh token is not valid");
+  }
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+    if (err) {
+      console.log(err);
+    }
+    refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
+    //Create new access token, refresh token
+    const newAccessToken = creacteAccessToken(user);
+    const newRefreshToken = creacteRefreshToken(user);
+    refreshTokens.push(newRefreshToken);
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: false,
+      path: "/",
+      sameSite: "strict",
+    });
+    res.status(200).json({ accessToken: newAccessToken });
+  });
+};
+const logout = async (req, res) => {
+  res.clearCookie("refreshToken");
+  refreshTokens = refreshTokens.filter(
+    (token) => token !== req.cookies.refreshToken
+  );
+  return res.status(200).json({
+    success: true,
+    message: "Đăng xuất thành công!",
+  });
+};
+
 module.exports = {
   register,
   login,
@@ -181,4 +218,6 @@ module.exports = {
   getUserById,
   updateUser,
   removeUser,
+  createNewRefreshToken,
+  logout,
 };
