@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const mongoosePaginate = require("mongoose-paginate-v2");
+const slug = require("mongoose-slug-generator");
+mongoose.plugin(slug);
 
 const { Schema } = mongoose;
 const productSchema = new Schema(
@@ -16,11 +18,15 @@ const productSchema = new Schema(
     description: {
       type: String,
     },
+    image: { type: String, required: true },
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
+    slug: { type: String, slug: "productName" },
+    review_count: { type: Number, default: 0 },
+    average_score: { type: Number, default: 0 },
   },
   { timestamps: true, versionKey: false }
 );

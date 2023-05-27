@@ -1,9 +1,10 @@
 const Product = require("../models/Product");
 const category = require("../models/category");
+const slugify = require("slugify");
 
 const createProduct = async (req, res) => {
-  const { productName, price, description, categoryId } = req.body;
-  if (!productName || !price || !description || !categoryId) {
+  const { productName, price, description, categoryId, image } = req.body;
+  if (!productName || !price || !description || !categoryId || !image) {
     return res
       .status(400)
       .json({ success: false, message: "Vui lòng điền đầy đủ thông tin!" });
@@ -17,7 +18,7 @@ const createProduct = async (req, res) => {
     });
     res.status(200).json({
       success: true,
-      message: "Tạo mới danh mục thành công !",
+      message: "Tạo mới sản phẩm thành công !",
       data: product,
     });
   } catch (error) {
@@ -71,7 +72,62 @@ const getProductById = async (req, res) => {
   } catch (err) {}
 };
 
-module.exports = { createProduct, getProducts, getProductById };
+const updateProduct = async (req, res) => {
+  const id = req.params.id;
+  const { productName, price, description, categoryId, image } = req.body;
+  if (!productName || !price || !description || !categoryId || !image) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Vui lòng điền đầy đủ thông tin!" });
+  }
+  try {
+    const newSlug = slugify(productName, { lower: true });
+    const newProduct = {
+      productName,
+      price,
+      description,
+      categoryId,
+      image,
+      slug: newSlug,
+    };
+    const data = await Product.findByIdAndUpdate(id, newProduct);
+    if (!data) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Cập nhật sản phẩm thất bại" });
+    }
+    return res
+      .status(400)
+      .json({ success: false, message: "Cập nhật sản phẩm thành công" });
+  } catch (error) {}
+};
+
+const removeProduct = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const data = await Product.findByIdAndDelete(id);
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: "Không tìm thấy sản phẩm",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Xoá sản phẩm thành công",
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+module.exports = {
+  createProduct,
+  getProducts,
+  getProductById,
+  updateProduct,
+  removeProduct,
+};
 
 // const {
 //   _page = 1,

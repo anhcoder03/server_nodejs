@@ -3,6 +3,8 @@ const {
   createProduct,
   getProducts,
   getProductById,
+  updateProduct,
+  removeProduct,
 } = require("../controllers/productController");
 const {
   createCategory,
@@ -24,6 +26,8 @@ const initApiRoute = (app) => {
 
   //product
   route.post("/create-product", createProduct);
+  route.put("/update-product/:id", updateProduct);
+  route.delete("/remove-product/:id", removeProduct);
   route.get("/getProducts", getProducts);
   route.get("/getProduct/:id", getProductById);
   return app.use("/api/v1", route);
