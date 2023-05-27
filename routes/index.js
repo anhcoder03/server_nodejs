@@ -13,6 +13,14 @@ const {
   getAllCategory,
   getCategoryById,
 } = require("../controllers/categoryController");
+const {
+  register,
+  login,
+  getAllUser,
+  getUserById,
+  updateUser,
+  removeUser,
+} = require("../controllers/authController");
 
 const route = express.Router();
 
@@ -32,5 +40,14 @@ const initApiRoute = (app) => {
   route.get("/getProduct/:id", getProductById);
   return app.use("/api/v1", route);
 };
+const authRoute = (app) => {
+  route.post("/register", register);
+  route.post("/login", login);
+  route.get("/get-all-user", getAllUser);
+  route.get("/getUser/:id", getUserById);
+  route.put("/update-user/:id", updateUser);
+  route.delete("/remove-user/:id", removeUser);
+  return app.use("/api/v1", route);
+};
 
-module.exports = { initApiRoute };
+module.exports = { initApiRoute, authRoute };
