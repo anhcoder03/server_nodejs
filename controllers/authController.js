@@ -9,7 +9,7 @@ const creacteAccessToken = (payload) => {
     { id: payload._id, admin: payload.admin },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "20s",
+      expiresIn: "1d",
     }
   );
 };
