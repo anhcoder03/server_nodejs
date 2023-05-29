@@ -25,9 +25,18 @@ const {
 } = require("../controllers/authController");
 const { verifyTokenAdmin, verifyToken } = require("../middleware/auth");
 
+const { uploadImage, deleteImage } = require("../controllers/uploadController");
+const { storage } = require("../config/cloudinary");
+const multer = require("multer");
+
+const upload = multer({ storage: storage });
 const route = express.Router();
 
 const initApiRoute = (app) => {
+  //image
+  route.post("/upload-image", upload.array("image", 10), uploadImage);
+  route.delete("/delete-image/:publicId", deleteImage);
+
   //category
   route.post("/create-category", createCategory);
   route.delete("/remove-category/:id", removeCategory);
