@@ -12,12 +12,10 @@ const createProduct = async (req, res) => {
   try {
     const checkHasProduct = await Product.findOne({ productName });
     if (checkHasProduct) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Sản phẩm đã tồn tại trong giỏ hàng!",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Sản phẩm đã tồn tại trong giỏ hàng!",
+      });
     }
     const product = await Product.create(req.body);
     await category.findOneAndUpdate(product.categoryId, {
@@ -106,9 +104,11 @@ const updateProduct = async (req, res) => {
         .json({ success: false, message: "Cập nhật sản phẩm thất bại" });
     }
     return res
-      .status(400)
-      .json({ success: false, message: "Cập nhật sản phẩm thành công" });
-  } catch (error) {}
+      .status(200)
+      .json({ success: true, message: "Cập nhật sản phẩm thành công" });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error });
+  }
 };
 
 const removeProduct = async (req, res) => {
