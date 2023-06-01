@@ -98,15 +98,18 @@ const login = async (req, res) => {
 const getAllUser = async (req, res) => {
   try {
     const data = await User.find();
+
     if (!data) {
       return res.status(401).json({
         success: true,
         message: "Danh sách user trống!",
       });
     }
+    const totalUser = await User.count();
     return res.status(200).json({
       success: true,
-      data: data,
+      data,
+      totalUser,
     });
   } catch (error) {
     res.status(500).json({

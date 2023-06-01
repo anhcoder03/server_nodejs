@@ -55,7 +55,7 @@ const initApiRoute = (app) => {
 const authRoute = (app) => {
   route.post("/register", register);
   route.post("/login", login);
-  route.get("/get-all-user", verifyTokenAdmin, getAllUser);
+  route.get("/get-all-user", getAllUser);
   route.get("/getUser/:id", getUserById);
   route.put("/update-user/:id", updateUser);
   route.delete("/remove-user/:id", removeUser);

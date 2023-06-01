@@ -58,6 +58,7 @@ const getProducts = async (req, res) => {
       message: "Good job",
       data,
       totalPage,
+      totalProduct,
     });
   } catch (err) {
     res.status(400).json(`Lỗi: ${err}`);
